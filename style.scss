@@ -1,0 +1,95 @@
+$hue: 50;
+$shift: 30;
+$color: hsl($hue, 30%, 60%);
+$light: lighten(adjust-hue($color, $shift), 20%);
+$lighter: lighten(adjust-hue($color, $shift * 2), 20%);
+$dark: darken(adjust-hue($color, -$shift), 20%);
+$darker: darken(adjust-hue($color, -$shift*2), 20%);
+
+$grid-size: 10rem;
+$rows: 5;
+$cols: 5;
+
+html {
+  font-size: 1.2vh;
+}
+
+body {
+  height: 100vh;
+  width: 100vh;
+  overflow: hidden;
+  background: $darker;
+  color: white;
+  font-size: 2rem;
+  font-family: "Quicksand", sans-serif;
+}
+
+.level {
+  opacity: 0;
+  transform: translate($grid-size *2, -$grid-size *2);
+  transition: transform 600ms ease-out, opacity 600ms ease-out;
+  pointer-events: none;
+
+  &[level="1"] {
+    opacity: 1;
+    transform: translate(0, 0);
+    pointer-events: auto;
+  }
+}
+
+input {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#level-one {
+  position: absolute;
+  z-index: 10000;
+}
+
+.step {
+  width: $grid-size * 1.01;
+  height: $grid-size * 1.01;
+  background: $light;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform: translate(-$grid-size/2, $grid-size/2);
+  pointer-events: none;
+  transition: transform 600ms ease-in, opacity 600ms linear;
+
+  &.start, &:hover, &:hover + .step {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @for $r from 1 through 4 {
+    &[row="#{$r}"] {
+      top: $r * 10rem;
+    }
+  }
+
+  @for $c from 1 through 4 {
+    &[col="#{$c}"] {
+      left: $c * 10rem;
+    }
+  }
+
+  @for $r from 0 through 4 {
+    @for $c from 0 through 4 {
+      &[col="#{$c}"][row="#{$r}"] {
+        z-index: ($r + 1) * ($cols - $c);
+      }
+    }
+  }
+}
+
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: $grid-size * $cols;
+  height: $grid-size * $rows;
+}
