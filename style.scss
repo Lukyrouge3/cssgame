@@ -10,6 +10,8 @@ $grid-size: 10rem;
 $rows: 5;
 $cols: 5;
 
+//Je setup mes couleurs et quelques autre paramètre pour les réutiliser plus tard dans le code et pouvoir les modifier rapidement sans devoir le remodifier partout
+
 html {
   font-size: 1.2vh;
 }
@@ -29,12 +31,15 @@ body {
   transform: translate($grid-size *2, -$grid-size *2);
   transition: transform 600ms ease-out, opacity 600ms ease-out;
   pointer-events: none;
-
+  //Je centre mes levels et desactive les intéractions avec la souris
   &[level="1"] {
     opacity: 1;
     transform: translate(0, 0);
     pointer-events: auto;
+    // On place
   }
+
+  //J'affiche le premier level et réactive les intéractions.
 }
 
 input {
@@ -42,14 +47,19 @@ input {
   pointer-events: none;
 }
 
+// Input pour traquer les niveaux. Invisible et impossible à cocher à la main.
+
 #level-one {
   position: absolute;
   z-index: 10000;
 }
 
+// Premier level au dessus du reste
+
 .step {
   width: $grid-size * 1.01;
   height: $grid-size * 1.01;
+  line-height: $grid-size * 1.01;
   background: $light;
   position: absolute;
   top: 0;
@@ -58,11 +68,25 @@ input {
   transform: translate(-$grid-size/2, $grid-size/2);
   pointer-events: none;
   transition: transform 600ms ease-in, opacity 600ms linear;
-
+  // Je place chaque step et je les rends invisibles et fait en sorte que les intéractions ne soit pas actives.
   &.start, &:hover, &:hover + .step {
     transform: scale(1);
     opacity: 1;
     pointer-events: auto;
+    // Le premier step (start) ainsi que celui qui est hover + le suivant, on les affiches et active les intéractions.
+  }
+
+  &.finish {
+    transform: scale(1);
+    opacity: 1;
+    background: $dark;
+  }
+
+  &.finish img {
+    width: $grid-size;
+    height: auto;
+    //display: block;
+    //text-align: center;
   }
 
   @for $r from 1 through 4 {
@@ -76,7 +100,7 @@ input {
       left: $c * 10rem;
     }
   }
-
+  // Chaques steps sont placés en fonction de leur row et leur col.
   @for $r from 0 through 4 {
     @for $c from 0 through 4 {
       &[col="#{$c}"][row="#{$r}"] {
@@ -84,6 +108,7 @@ input {
       }
     }
   }
+  // On met le zindex en fonction de leur position.
 }
 
 .center {
@@ -93,3 +118,5 @@ input {
   width: $grid-size * $cols;
   height: $grid-size * $rows;
 }
+
+// une classe pour centrer des éléments.
