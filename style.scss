@@ -1,14 +1,30 @@
-$hue: 50;
+$hue: 180;
 $shift: 30;
 $color: hsl($hue, 30%, 60%);
 $light: lighten(adjust-hue($color, $shift), 20%);
-$lighter: lighten(adjust-hue($color, $shift * 2), 20%);
-$dark: darken(adjust-hue($color, -$shift), 20%);
-$darker: darken(adjust-hue($color, -$shift*2), 20%);
+$lighter: lighten(adjust-hue($color, $shift * 2), 40%);
+$dark: darken(adjust-hue($color, -$shift), 10%);
+$darker: darken(adjust-hue($color, -$shift * 2), 20%);
+$pop: hsl($hue - 180, 80%, 60%);
+
+$short: 200ms;
+$mid: 600ms;
+$long: 2000ms;
+$ease-in: cubic-bezier(0.755, 0.05, 0.855, 0.06);
+$ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
 $grid-size: 10rem;
 $rows: 5;
 $cols: 5;
+
+@mixin absolute {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 
 //Je setup mes couleurs et quelques autre paramètre pour les réutiliser plus tard dans le code et pouvoir les modifier rapidement sans devoir le remodifier partout
 
@@ -18,7 +34,7 @@ html {
 
 body {
   height: 100vh;
-  width: 100vh;
+  width: 100vw;
   overflow: hidden;
   background: $darker;
   color: white;
@@ -29,32 +45,56 @@ body {
 .level {
   opacity: 0;
   transform: translate($grid-size *2, -$grid-size *2);
-  transition: transform 600ms ease-out, opacity 600ms ease-out;
+  transition: transform $mid $ease-out, opacity $mid $ease-out;
   pointer-events: none;
   //Je centre mes levels et desactive les intéractions avec la souris
   &[level="1"] {
     opacity: 1;
     transform: translate(0, 0);
     pointer-events: auto;
-    // On place
   }
-
   //J'affiche le premier level et réactive les intéractions.
-}
 
+  &:hover .finish {
+    transform: scale(1);
+    opacity: 1;
+    pointer-events: auto;
+    transition: transform $short $ease-out, opacity $short linear;
+  }
+}
+.level-title {
+  position: absolute;
+  top: -20rem;
+  left: -20rem;
+  font-family: "Russo One", sans-serif;
+  font-size: 10rem;
+}
 input {
   opacity: 0;
   pointer-events: none;
 }
-
 // Input pour traquer les niveaux. Invisible et impossible à cocher à la main.
+
+// On prend le level qui vient d'être coché avec input:checked + .level
+// Puis on récupère le level suivant
+input:checked + .level + input + .level {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, 0);
+}
+
+// On cache les levels terminés
+input:checked + .level {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translate(-$grid-size * 2, $grid-size * 2) !important;
+}
 
 #level-one {
   position: absolute;
   z-index: 10000;
+  // Premier level au dessus du reste
 }
-
-// Premier level au dessus du reste
 
 .step {
   width: $grid-size * 1.01;
@@ -67,26 +107,37 @@ input {
   opacity: 0;
   transform: translate(-$grid-size/2, $grid-size/2);
   pointer-events: none;
-  transition: transform 600ms ease-in, opacity 600ms linear;
+  transition: transform $mid $ease-in, opacity $mid linear;
   // Je place chaque step et je les rends invisibles et fait en sorte que les intéractions ne soit pas actives.
   &.start, &:hover, &:hover + .step {
     transform: scale(1);
     opacity: 1;
     pointer-events: auto;
+    transition: transform $short $ease-out, opacity $short linear;
     // Le premier step (start) ainsi que celui qui est hover + le suivant, on les affiches et active les intéractions.
   }
 
-  &.finish {
-    transform: scale(1);
-    opacity: 1;
+  // J'ajoute un peu de 3d pour un meilleur rendu.
+  &::before,
+  &::after {
+    content: "";
+    @include absolute;
+    pointer-events: none !important;
+  }
+  &::before {
+    left: -20%;
     background: $dark;
+    transform-origin: 100% 100%;
+    transform: skewy(-45deg);
+    width: 20%;
   }
 
-  &.finish img {
-    width: $grid-size;
-    height: auto;
-    //display: block;
-    //text-align: center;
+  &::after {
+    top: 100%;
+    background: $color;
+    transform-origin: 0% 0%;
+    transform: skewX(-45deg);
+    height: 20%;
   }
 
   @for $r from 1 through 4 {
@@ -113,10 +164,34 @@ input {
 
 .center {
   position: absolute;
-  top: 25%;
-  left: 25%;
+  top: 50%;
+  left: 50%;
   width: $grid-size * $cols;
   height: $grid-size * $rows;
+  transform: perspective(100rem) translate(-50%, -50%) rotateZ(-45deg);
+  // Je met un peu de perspective pour un meilleur rendu
 }
 
-// une classe pour centrer des éléments.
+.button, .goal {
+  position: absolute;
+  top: 5%;
+  left: 20%;
+  width: 75%;
+  height: 75%;
+  border-radius: $grid-size;
+  background: $pop;
+  text-align: center;
+  line-height: $grid-size*.8;
+  box-shadow: -$grid-size*.05 $grid-size*.05 $grid-size*.05 $color;
+  transition: box-shadow $short $ease-out, transform $short $ease-out;
+
+  &:hover {
+    transform: translate($grid-size * 0.05, -$grid-size * 0.05);
+    box-shadow: -$grid-size * 0.2 $grid-size * 0.2 $grid-size * 0.3 $color;
+  }
+
+  &:active {
+    transform: translate($grid-size * -0.05, -$grid-size * -0.05);
+    box-shadow: 0 0 0 $color;
+  }
+}
