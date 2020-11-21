@@ -53,6 +53,7 @@ body {
     transform: translate(0, 0);
     pointer-events: auto;
   }
+
   //J'affiche le premier level et réactive les intéractions.
 
   &:hover .finish {
@@ -62,6 +63,7 @@ body {
     transition: transform $short $ease-out, opacity $short linear;
   }
 }
+
 .level-title {
   position: absolute;
   top: -20rem;
@@ -69,10 +71,12 @@ body {
   font-family: "Russo One", sans-serif;
   font-size: 10rem;
 }
+
 input {
   opacity: 0;
   pointer-events: none;
 }
+
 // Input pour traquer les niveaux. Invisible et impossible à cocher à la main.
 
 // On prend le level qui vient d'être coché avec input:checked + .level
@@ -109,12 +113,17 @@ input:checked + .level {
   pointer-events: none;
   transition: transform $mid $ease-in, opacity $mid linear;
   // Je place chaque step et je les rends invisibles et fait en sorte que les intéractions ne soit pas actives.
-  &.start, &:hover, &:hover + .step {
+  &.start,
+  &:hover,
+  &:hover + .step,
+  &:hover + .path > .step:first-child,
+  &:hover + .path + .step {
     transform: scale(1);
     opacity: 1;
     pointer-events: auto;
     transition: transform $short $ease-out, opacity $short linear;
-    // Le premier step (start) ainsi que celui qui est hover + le suivant, on les affiches et active les intéractions.
+    // Le premier step (start) ainsi que celui qui est hover + le suivant, on les affiches et active les interactions.
+    //J'ai rajouté un système de path où on peut se perdre
   }
 
   // J'ajoute un peu de 3d pour un meilleur rendu.
@@ -124,6 +133,7 @@ input:checked + .level {
     @include absolute;
     pointer-events: none !important;
   }
+
   &::before {
     left: -20%;
     background: $dark;
