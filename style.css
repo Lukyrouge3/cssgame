@@ -15,7 +15,7 @@ body {
 .level {
   opacity: 0;
   transform: translate(20rem, -20rem);
-  transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1), opacity 600ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: transform 700ms cubic-bezier(0.23, 1, 0.32, 1), opacity 700ms cubic-bezier(0.23, 1, 0.32, 1);
   pointer-events: none;
 }
 .level[level="1"] {
@@ -27,7 +27,7 @@ body {
   transform: scale(1);
   opacity: 1;
   pointer-events: auto;
-  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms linear;
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms linear;
 }
 
 .level-title {
@@ -71,13 +71,13 @@ input:checked + .level {
   opacity: 0;
   transform: translate(-5rem, 5rem);
   pointer-events: none;
-  transition: transform 600ms cubic-bezier(0.755, 0.05, 0.855, 0.06), opacity 600ms linear;
+  transition: transform 700ms cubic-bezier(0.755, 0.05, 0.855, 0.06), opacity 700ms linear;
 }
-.step.start, .step:hover, .step:hover + .step, .step:hover + .path > .step:first-child, .step:hover + .path + .step {
+.step.start, .step:hover, .step:hover + .step, .step:hover + .path > .step:first-child, .step:hover + .path + .step, .step:hover.bridge + input:checked + .step, .step:hover.bridge + input + .step + .step {
   transform: scale(1);
   opacity: 1;
   pointer-events: auto;
-  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1), opacity 200ms linear;
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1), opacity 300ms linear;
 }
 .step::before, .step::after {
   content: "";
@@ -222,7 +222,7 @@ input:checked + .level {
   text-align: center;
   line-height: 8rem;
   box-shadow: -0.5rem 0.5rem 0.5rem #7ab8b8;
-  transition: box-shadow 200ms cubic-bezier(0.23, 1, 0.32, 1), transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: box-shadow 300ms cubic-bezier(0.23, 1, 0.32, 1), transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .button:hover, .goal:hover {
   transform: translate(0.5rem, -0.5rem);
@@ -231,6 +231,12 @@ input:checked + .level {
 .button:active, .goal:active {
   transform: translate(-0.5rem, 0.5rem);
   box-shadow: 0 0 0 #7ab8b8;
+}
+
+.button input {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, 0);
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -7,8 +7,8 @@ $dark: darken(adjust-hue($color, -$shift), 10%);
 $darker: darken(adjust-hue($color, -$shift * 2), 20%);
 $pop: hsl($hue - 180, 80%, 60%);
 
-$short: 200ms;
-$mid: 600ms;
+$short: 300ms;
+$mid: 700ms;
 $long: 2000ms;
 $ease-in: cubic-bezier(0.755, 0.05, 0.855, 0.06);
 $ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -117,13 +117,16 @@ input:checked + .level {
   &:hover,
   &:hover + .step,
   &:hover + .path > .step:first-child,
-  &:hover + .path + .step {
+  &:hover + .path + .step,
+  &:hover.bridge + input:checked + .step,
+  &:hover.bridge + input + .step + .step {
     transform: scale(1);
     opacity: 1;
     pointer-events: auto;
     transition: transform $short $ease-out, opacity $short linear;
     // Le premier step (start) ainsi que celui qui est hover + le suivant, on les affiches et active les interactions.
     //J'ai rajouté un système de path où on peut se perdre
+    // Ajouté un système de bridge
   }
 
   // J'ajoute un peu de 3d pour un meilleur rendu.
@@ -204,4 +207,10 @@ input:checked + .level {
     transform: translate($grid-size * -0.05, -$grid-size * -0.05);
     box-shadow: 0 0 0 $color;
   }
+}
+
+.button input {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, 0);
 }
