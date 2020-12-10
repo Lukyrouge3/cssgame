@@ -1,23 +1,43 @@
-function generateRandomLevel() {
-    let stepCount = random(20, 40);
+function generateRandomLevel(stepCount = 10) {
     let steps = [];
 
     let cr = 0, cc = 0;
+    let end = [4, 4];
+    let lastR = 0, r, tempCr, tempCc;
+//    -1 => cr +1, 1 => cr -1, -2 => cc+1, 2=> cc-1
+    // cr < 5 && cr > 0 && cc < 5 && cc > 0
+    steps.push([0, 0]);
     for (let i = 0; i < stepCount; i++) {
-        //0 => cr +1, 1 => cr -1, 2 => cc+1, 3=> cc-1
         do {
-            let r = random(0, 3);
-            if (r === 0 && cr < 4) cr += 1;
-            if (r === 1 && cr > 0) cr -= 1;
-            if (r === 2 && cc < 4) cc += 1;
-            if (r === 3 && cc > 0) cc -= 1;
-        }
-        while (steps[steps.length - 1] && (steps[steps.length - 1][0] === cr && steps[steps.length - 1][1] === cc));
-        let step = [cr, cc];
-        steps.push(step);
+            tempCr = cr;
+            tempCc = cc;
+            do {
+                r = random(-2, 2);
+            } while (r === 0 || r === -lastR || (r === -1 && cr >= 4)
+            || (r === -2 && cc >= 4) || (r === 1 && cr <= 0)
+            || (r === 2 && cc <= 0));
+            if (r === -1 && tempCr < 4) tempCr += 1;
+            if (r === 1 && tempCr > 0) tempCr -= 1;
+            if (r === -2 && tempCc < 4) tempCc += 1;
+            if (r === 2 && tempCc > 0) tempCc -= 1;
+            console.log(tempCr, tempCc, end, r, lastR, i);
+        } while ((tempCr === end[0] && (tempCc + 1 === end[1]) || (tempCc - 1 === end[1])) ||
+        (tempCc === end[1] && (tempCr + 1 === end[0]) || (tempCr - 1 === end[0])) || (tempCr === 0 && tempCc === 0));
+        cr = tempCr;
+        cc = tempCc;
+        lastR = r;
+        steps.push([cr, cc]);
     }
-
-    console.log(steps);
+    console.log("DONE");
+    let lastStep = steps[steps.length - 1];
+    while (lastStep[0] !== end[0]) {
+        steps.push([lastStep[0] + 1, lastStep[1]]);
+        lastStep = steps[steps.length - 1];
+    }
+    while (lastStep[1] !== end[1]) {
+        steps.push([lastStep[0], lastStep[1] + 1]);
+        lastStep = steps[steps.length - 1];
+    }
     return steps;
 }
 
